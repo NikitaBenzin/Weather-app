@@ -1,8 +1,25 @@
 import { Component } from'react';
+import WeatherService from '../services/WeatherService';
 
 import './appMain.css';
 
 class AppMain extends Component {
+    state = {
+        condition: null,
+        time: null
+    }
+
+    weatherService = new WeatherService();
+
+    componentDidMount() {
+        this.updateMain();
+    }
+
+    updateMain = () => {
+
+    }
+
+
     render() {
         return (
             <main>

@@ -6,7 +6,7 @@ import './appHeader.css';
 class AppHeader extends Component {
     state = {
         place: null,
-        time: null
+        time: new Date().toLocaleTimeString()
     }
 
     weatherService = new WeatherService();
@@ -15,17 +15,28 @@ class AppHeader extends Component {
         this.updateHeader();
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        setTimeout(() => this.updateTime(), 1000);
+    }
+
+    componentWillUnmount(){
+        clearInterval();
+    }
+
     updateHeader = () => {
-        const placeName = 'Kyiv';
-        
         this.weatherService
-            .getWeatherInPlace(placeName)
+            .getWeatherThrowAllDay()
             .then(res => {
                 this.setState({
-                    place: res.location.name,
-                    time: res.location.localtime.slice(-5)
+                    place: res.location.name
                 })
             })
+    }
+
+    updateTime = () => {
+        this.setState({
+            time: new Date().getHours() + ':' + new Date().getMinutes()
+        })
     }
 
     render() {

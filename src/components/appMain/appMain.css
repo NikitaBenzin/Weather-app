@@ -8,8 +8,8 @@ main {
 }
 
 .mainImg img {
-    width: 144px;
-    height: 144px;
+    width: 244px;
+    height: 244px;
 }
 
 .mainImg {
@@ -23,8 +23,8 @@ main {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 10px;
-    height: 10px;
+    width: 1px;
+    height: 1px;
     -webkit-box-shadow: -5px -9px 80px 40px rgba(157, 157, 157, 1);
     -moz-box-shadow: -5px -9px 80px 40px rgba(157, 157, 157, 1);
     box-shadow: -5px -9px 80px 40px rgba(157, 157, 157, 1);

@@ -6,7 +6,10 @@ import './appMain.css';
 class AppMain extends Component {
     state = {
         condition: null,
-        time: null
+        temp: null,
+        img: null,
+        hours: [],
+        currentHour: null
     }
 
     weatherService = new WeatherService();
@@ -16,19 +19,63 @@ class AppMain extends Component {
     }
 
     updateMain = () => {
+        this.weatherService
+            .getWeatherThrowAllDay()
+            .then(res => {
+                this.setState({
+                    condition: res.current.condition.text,
+                    temp: res.current.temp_c,
+                    img: res.current.condition.icon,
+                    hours: res.forecast.forecastday[0].hour,
+                    currentHour: res.location.localtime
+                })
+            })
+    }
 
+
+
+    renderItems(arr) {
+        // создыть переменную и масив parseInt(item.time.slice(-6, -3)) - 2)
+
+        arr.forEach((item) => {
+            if (item.time.slice(-6, -3) === this.state.currentHour.slice(-6, -3)){
+                console.log(parseInt(item.time.slice(-6, -3)) - 2);
+            }
+        })
+
+        const items =  arr.map((item) => {
+            return (
+                <div className="cardBackground">
+                    <section className="card">
+                        <p className="cardTime">{item.time.slice(-5, -3)}<span>AM</span></p>
+                        <img src={item.condition.icon} alt={item.condition.text} />
+                        <p className='cardTemperature'>{item.temp_c}°</p>
+                    </section>
+                </div>
+            )
+        });
+      
+        return (
+            <section className="weatherCards">
+                {items}
+            </section>
+        )
     }
 
 
     render() {
+        const { condition, temp, img, hours } = this.state;
+
+        const items = this.renderItems(hours);
+
         return (
             <main>
                 <div className="mainImg">
-                    <img src='https://s3-alpha-sig.figma.com/img/4b11/648f/04428373d3ffc3d5ab15a19db807e273?Expires=1698624000&Signature=ESdg3VG7c5VaDvq7wY~p7IVv6Sp5hGP8Foz6n4-8DCqlkbyUnfPzuW5zHvREXUmpbqoJjHU2b3XDfEADfA83x7cA6iLvfa0OcQ~Of~gK4QALu~KQMXKm~WXKtPdCUQ466QUM-VOa0f2DF3MfO0Xlub8Cz5FVf2vNS-T3~yw0-Tn1H5aFP4H1cTuEw-KQJdbjzHSpg5yUJsMF29NQMx56EBhJsiBU0BzR0voJ3119wy9O0wyfeJTIf~6LaUdSG1JYlEkUO-X9vY7nqFG5kceh4vjXbZbXAj-z45gsArqE~ZvlpY2Ce9qPlwVSLHZpsDdfJWxO5DKHRAfnoIxFv0~N6Q__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4' alt="Sun And Clude" />
+                    <img src={img} alt={condition} />
                 </div>
                 <section className='weatherState'>
-                    <p>partly cloudy</p>
-                    <p>24°</p>
+                    <p>{condition}</p>
+                    <p>{temp}°</p>
                 </section>
 
                 <section className="temperature">
@@ -49,47 +96,7 @@ class AppMain extends Component {
                     </svg>
                 </section>
 
-                <section className="weatherCards">
-                    <div className="cardBackground">
-                        <section className="card">
-                            <p className="cardTime">9<span>AM</span></p>
-                            <img src="https://s3-alpha-sig.figma.com/img/68d5/dae6/c9f6bd844d44fea2b13de41a10558631?Expires=1698624000&Signature=iWCdvDAyfWAKsVawflwEEGfRNTV1VtXWis8jifFPdqUNx1oiL5M2I7t6OkCnzhB1rdYk24o72s-Qx~iFxjqf6XmXh2DujFkXdJY58l72IEWFB83jUxgcVsnv--NhEzcvHTJMGsXNkeUTnrZpD1WaGuAY1NdpXf8G~S6Vna9AclHcH6YBMc7f5YzE~O8cfryE0rpFx6MRqe62sLm672zfdZHAjkvkqDIK-F7ESNzC5UsKE-ccp9qnzTyOc95B5HYxEoStFGRjLPjrkfHbuGYEuY~vmy0ph3rfz6dystSoyu~HfkwsbCsKEdwB-5kC8xbX8bZzxgtoRNoBG7jPbEYKCw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="Cloud" />
-                            <p className='cardTemperature'>24°</p>
-                        </section>
-                    </div>
-                    
-                    <div className="cardBackground ">
-                        <section className="card">
-                            <p className="cardTime">9<span>AM</span></p>
-                            <img src="https://s3-alpha-sig.figma.com/img/68d5/dae6/c9f6bd844d44fea2b13de41a10558631?Expires=1698624000&Signature=iWCdvDAyfWAKsVawflwEEGfRNTV1VtXWis8jifFPdqUNx1oiL5M2I7t6OkCnzhB1rdYk24o72s-Qx~iFxjqf6XmXh2DujFkXdJY58l72IEWFB83jUxgcVsnv--NhEzcvHTJMGsXNkeUTnrZpD1WaGuAY1NdpXf8G~S6Vna9AclHcH6YBMc7f5YzE~O8cfryE0rpFx6MRqe62sLm672zfdZHAjkvkqDIK-F7ESNzC5UsKE-ccp9qnzTyOc95B5HYxEoStFGRjLPjrkfHbuGYEuY~vmy0ph3rfz6dystSoyu~HfkwsbCsKEdwB-5kC8xbX8bZzxgtoRNoBG7jPbEYKCw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="Cloud" />
-                            <p className='cardTemperature'>24°</p>
-                        </section>
-                    </div>
-
-                    <div className="cardBackground selected">
-                        <section className="card">
-                            <p className="cardTime">9<span>AM</span></p>
-                            <img src="https://s3-alpha-sig.figma.com/img/68d5/dae6/c9f6bd844d44fea2b13de41a10558631?Expires=1698624000&Signature=iWCdvDAyfWAKsVawflwEEGfRNTV1VtXWis8jifFPdqUNx1oiL5M2I7t6OkCnzhB1rdYk24o72s-Qx~iFxjqf6XmXh2DujFkXdJY58l72IEWFB83jUxgcVsnv--NhEzcvHTJMGsXNkeUTnrZpD1WaGuAY1NdpXf8G~S6Vna9AclHcH6YBMc7f5YzE~O8cfryE0rpFx6MRqe62sLm672zfdZHAjkvkqDIK-F7ESNzC5UsKE-ccp9qnzTyOc95B5HYxEoStFGRjLPjrkfHbuGYEuY~vmy0ph3rfz6dystSoyu~HfkwsbCsKEdwB-5kC8xbX8bZzxgtoRNoBG7jPbEYKCw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="Cloud" />
-                            <p className='cardTemperature'>24°</p>
-                        </section>
-                    </div>
-
-                    <div className="cardBackground">
-                        <section className="card">
-                            <p className="cardTime">9<span>AM</span></p>
-                            <img src="https://s3-alpha-sig.figma.com/img/68d5/dae6/c9f6bd844d44fea2b13de41a10558631?Expires=1698624000&Signature=iWCdvDAyfWAKsVawflwEEGfRNTV1VtXWis8jifFPdqUNx1oiL5M2I7t6OkCnzhB1rdYk24o72s-Qx~iFxjqf6XmXh2DujFkXdJY58l72IEWFB83jUxgcVsnv--NhEzcvHTJMGsXNkeUTnrZpD1WaGuAY1NdpXf8G~S6Vna9AclHcH6YBMc7f5YzE~O8cfryE0rpFx6MRqe62sLm672zfdZHAjkvkqDIK-F7ESNzC5UsKE-ccp9qnzTyOc95B5HYxEoStFGRjLPjrkfHbuGYEuY~vmy0ph3rfz6dystSoyu~HfkwsbCsKEdwB-5kC8xbX8bZzxgtoRNoBG7jPbEYKCw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="Cloud" />
-                            <p className='cardTemperature'>24°</p>
-                        </section>
-                    </div>
-
-                    <div className="cardBackground">
-                        <section className="card">
-                            <p className="cardTime">9<span>AM</span></p>
-                            <img src="https://s3-alpha-sig.figma.com/img/68d5/dae6/c9f6bd844d44fea2b13de41a10558631?Expires=1698624000&Signature=iWCdvDAyfWAKsVawflwEEGfRNTV1VtXWis8jifFPdqUNx1oiL5M2I7t6OkCnzhB1rdYk24o72s-Qx~iFxjqf6XmXh2DujFkXdJY58l72IEWFB83jUxgcVsnv--NhEzcvHTJMGsXNkeUTnrZpD1WaGuAY1NdpXf8G~S6Vna9AclHcH6YBMc7f5YzE~O8cfryE0rpFx6MRqe62sLm672zfdZHAjkvkqDIK-F7ESNzC5UsKE-ccp9qnzTyOc95B5HYxEoStFGRjLPjrkfHbuGYEuY~vmy0ph3rfz6dystSoyu~HfkwsbCsKEdwB-5kC8xbX8bZzxgtoRNoBG7jPbEYKCw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="Cloud" />
-                            <p className='cardTemperature'>24°</p>
-                        </section>
-                    </div>
-                </section>
+                {items}
 
             </main>
         )

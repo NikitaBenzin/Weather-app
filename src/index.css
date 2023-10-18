@@ -8,15 +8,17 @@
 }
 
 body {
-  font-weight: 700;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  min-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #1D2837;
 }
 
 #root {
-  width: 100%;
+  min-width: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
 
-  background: #1D2837;
 }
